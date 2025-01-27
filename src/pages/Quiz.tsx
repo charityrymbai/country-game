@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { countriesList } from "../data/countriesData";
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { countriesList } from '../data/countriesData';
 
 interface Questions {
-    options: string[];
-    correct_option: string;
-    question_text: string;
-    image_url: string;
+  options: string[];
+  correct_option: string;
+  question_text: string;
+  image_url: string;
 }
 
 const Quiz = () => {
   const location = useLocation();
-  const NUM_QUESTIONS : number = location.state?.data;
+  const NUM_QUESTIONS: number = location.state?.data;
   const navigate = useNavigate();
 
   const [questions, setQuestions] = useState<Questions[]>([]);
@@ -25,15 +25,14 @@ const Quiz = () => {
 
   useEffect(() => {
     if (!NUM_QUESTIONS) {
-        navigate("/home");
+      navigate('/home');
     }
     const generateQuestions = () => {
       const countryCodes = Object.keys(countriesList);
       const questions: Questions[] = [];
-    
 
       for (let i = 0; i < NUM_QUESTIONS; i++) {
-        const options:string[] = [];
+        const options: string[] = [];
         while (options.length < 4) {
           const randomIndex = Math.floor(Math.random() * countryCodes.length);
           const countryCode = countryCodes[randomIndex];
@@ -58,17 +57,20 @@ const Quiz = () => {
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
-    setAnswers({ ...answers, [currentQuestionIndex]: option });
+    setAnswers({
+      ...answers,
+      [currentQuestionIndex]: option,
+    });
     if (option === currentQuestion.correct_option) {
-      setBackGroundColor("bg-green-500");
+      setBackGroundColor('bg-green-500');
     } else {
-      setBackGroundColor("bg-red-500");
+      setBackGroundColor('bg-red-500');
       setShowAnswer(true);
     }
     setDisableButtons(true);
-    setTimeout(()=>{
-        handleNextQuestion();
-    }, 1000)
+    setTimeout(() => {
+      handleNextQuestion();
+    }, 1000);
   };
 
   const handleNextQuestion = () => {
@@ -78,7 +80,7 @@ const Quiz = () => {
     } else {
       setQuizCompleted(true);
     }
-    setBackGroundColor("");
+    setBackGroundColor('');
     setDisableButtons(false);
     setShowAnswer(false);
   };
@@ -94,26 +96,32 @@ const Quiz = () => {
   };
 
   return (
-    <div className={`${backGroundColor} grid wrapper h-screen w-screen place-content-center p-6`}>
+    <div
+      className={`${backGroundColor} grid wrapper h-screen w-screen place-content-center p-6`}
+    >
       {!quizCompleted ? (
         currentQuestion && (
           <div className="mb-16 sm:mb-0 border-2 border-black bg-gray-100 p-10 rounded-3xl w-full max-w-3xl text-center shadow-black shadow-lg">
             <h2 className="text-2xl  mb-6 text-black  p-4 rounded-full font-baloo">
               {currentQuestion.question_text}
             </h2>
-            <img src={currentQuestion.image_url} alt="Country flag" className="w-36 mb-6 mx-auto" />
+            <img
+              src={currentQuestion.image_url}
+              alt="Country flag"
+              className="w-36 mb-6 mx-auto"
+            />
             <div className="grid grid-cols-2 gap-4">
               {currentQuestion.options.map((option, index) => (
                 <button
                   key={index}
                   disabled={disableButtons}
                   className={`p-4 font-baloo rounded-full text-lg sm:text-xl text-black border-2 border-black hover:shadow-md hover:shadow-black transition-colors 
-                    ${showAnswer && (option === currentQuestion.correct_option)? "bg-green-400" : ""} 
-                    ${selectedOption === option? 
-                        `shadow-md shadow-black ${ selectedOption === currentQuestion.correct_option? "bg-green-400" : "bg-red-500"} `
-                      : 
-                        ""
-                  }`}
+                    ${showAnswer && option === currentQuestion.correct_option ? 'bg-green-400' : ''} 
+                    ${
+                      selectedOption === option
+                        ? `shadow-md shadow-black ${selectedOption === currentQuestion.correct_option ? 'bg-green-400' : 'bg-red-500'} `
+                        : ''
+                    }`}
                   onClick={() => handleOptionClick(option)}
                 >
                   {countriesList[option]}
@@ -131,7 +139,7 @@ const Quiz = () => {
           </p>
           <button
             className="bg-gray-400 hover:bg-gray-800 hover:text-white p-4 rounded-lg text-xl"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate('/home')}
           >
             Go Back
           </button>
