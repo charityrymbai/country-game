@@ -11,7 +11,11 @@ const Home:React.FC = () => {
         <button 
           className="bg-gray-400 hover:bg-gray-700 hover:text-white text-black font-bold py-4 px-20 rounded-full"
           onClick={() => {
-            navigate("/quiz", {state: { data : numQuestions }});
+            try {
+              navigate("/quiz", {state: { data : numQuestions }});
+            } catch (error) {
+              console.error("Navigation error:", error);
+            }
           }}
         >
           Start Quiz

@@ -97,7 +97,7 @@ const Quiz = () => {
     <div className={`${backGroundColor} grid wrapper h-screen w-screen place-content-center p-6`}>
       {!quizCompleted ? (
         currentQuestion && (
-          <div className="border-2 border-black bg-gray-100 p-10 rounded-3xl w-full max-w-3xl text-center mt-4 shadow-black shadow-lg">
+          <div className="mb-16 sm:mb-0 border-2 border-black bg-gray-100 p-10 rounded-3xl w-full max-w-3xl text-center shadow-black shadow-lg">
             <h2 className="text-2xl  mb-6 text-black  p-4 rounded-full font-baloo">
               {currentQuestion.question_text}
             </h2>
