@@ -18,9 +18,8 @@ const Quiz = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<number, string>>({});
-
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
-  const [backGroundColor, setBackGroundColor] = useState<string>("");
+  const [backGroundColor, setBackGroundColor] = useState<string | null>(null);
   const [disableButtons, setDisableButtons] = useState<boolean>(false);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
@@ -95,10 +94,10 @@ const Quiz = () => {
   };
 
   return (
-    <div className={`${backGroundColor} flex flex-col wrapper min-h-[100vh] h-fit min-w-[100vw] w-fit items-center justify-center  p-6`}>
+    <div className={`${backGroundColor} grid wrapper h-screen w-screen place-content-center p-6`}>
       {!quizCompleted ? (
         currentQuestion && (
-          <div className="bg-gray-100 p-10 rounded-3xl w-full max-w-3xl text-center mt-4 shadow-black shadow-lg">
+          <div className="border-2 border-black bg-gray-100 p-10 rounded-3xl w-full max-w-3xl text-center mt-4 shadow-black shadow-lg">
             <h2 className="text-2xl  mb-6 text-black  p-4 rounded-full font-baloo">
               {currentQuestion.question_text}
             </h2>
@@ -108,7 +107,8 @@ const Quiz = () => {
                 <button
                   key={index}
                   disabled={disableButtons}
-                  className={`p-4 font-baloo rounded-full text-xl text-black border border-[#0A2463] hover:shadow-md hover:shadow-black transition-colors ${showAnswer && (option === currentQuestion.correct_option)? "bg-green-400" : ""} 
+                  className={`p-4 font-baloo rounded-full text-lg sm:text-xl text-black border-2 border-black hover:shadow-md hover:shadow-black transition-colors 
+                    ${showAnswer && (option === currentQuestion.correct_option)? "bg-green-400" : ""} 
                     ${selectedOption === option? 
                         `shadow-md shadow-black ${ selectedOption === currentQuestion.correct_option? "bg-green-400" : "bg-red-500"} `
                       : 
@@ -123,7 +123,7 @@ const Quiz = () => {
           </div>
         )
       ) : (
-        <div className="bg-gray-100 p-10 rounded-lg shadow-lg w-full max-w-3xl text-center">
+        <div className="border-2 border-black bg-gray-100 p-10 rounded-lg shadow-lg w-full max-w-3xl text-center">
           <h2 className="text-3xl font-bold mb-6">Quiz Completed!</h2>
           <p className="text-2xl mb-4">
             You answered {evaluateQuiz()} out of {questions.length} questions
