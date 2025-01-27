@@ -1,4 +1,6 @@
-export const countriesList = {
+export const countriesList: {
+    [key: string]: string
+  } = {
   AE: "United Arab Emirates",
   AF: "Afghanistan",
   AG: "Antigua and Barbuda",

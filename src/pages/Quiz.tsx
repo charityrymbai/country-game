@@ -2,19 +2,27 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { countriesList } from "../data/countriesData";
 
+interface Questions {
+    options: string[];
+    correct_option: string;
+    question_text: string;
+    image_url: string;
+}
+
 const Quiz = () => {
   const location = useLocation();
-  const NUM_QUESTIONS = location.state?.data;
+  const NUM_QUESTIONS : number = location.state?.data;
   const navigate = useNavigate();
 
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState<Questions[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [answers, setAnswers] = useState({});
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
   const [backGroundColor, setBackGroundColor] = useState<string>("");
   const [disableButtons, setDisableButtons] = useState<boolean>(false);
-  const [correctAnswer, setCorrectAnswer] = useState<boolean>(false);
+  const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
   useEffect(() => {
     if (!NUM_QUESTIONS) {
@@ -22,10 +30,11 @@ const Quiz = () => {
     }
     const generateQuestions = () => {
       const countryCodes = Object.keys(countriesList);
-      const questions = [];
+      const questions: Questions[] = [];
+    
 
       for (let i = 0; i < NUM_QUESTIONS; i++) {
-        const options = [];
+        const options:string[] = [];
         while (options.length < 4) {
           const randomIndex = Math.floor(Math.random() * countryCodes.length);
           const countryCode = countryCodes[randomIndex];
@@ -43,9 +52,8 @@ const Quiz = () => {
       }
       setQuestions(questions);
     };
-
     generateQuestions();
-  }, []);
+  }, [NUM_QUESTIONS, navigate]);
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -56,13 +64,12 @@ const Quiz = () => {
       setBackGroundColor("bg-green-500");
     } else {
       setBackGroundColor("bg-red-500");
-      setCorrectAnswer(true);
+      setShowAnswer(true);
     }
     setDisableButtons(true);
     setTimeout(()=>{
         handleNextQuestion();
-    },1*1000)
-    
+    }, 1000)
   };
 
   const handleNextQuestion = () => {
@@ -74,7 +81,7 @@ const Quiz = () => {
     }
     setBackGroundColor("");
     setDisableButtons(false);
-    setCorrectAnswer(false);
+    setShowAnswer(false);
   };
 
   const evaluateQuiz = () => {
@@ -101,7 +108,7 @@ const Quiz = () => {
                 <button
                   key={index}
                   disabled={disableButtons}
-                  className={`p-4 font-baloo rounded-full text-xl text-black border border-[#0A2463] hover:shadow-md hover:shadow-black transition-colors ${correctAnswer && (option === currentQuestion.correct_option)? "bg-green-400" : ""} 
+                  className={`p-4 font-baloo rounded-full text-xl text-black border border-[#0A2463] hover:shadow-md hover:shadow-black transition-colors ${showAnswer && (option === currentQuestion.correct_option)? "bg-green-400" : ""} 
                     ${selectedOption === option? 
                         `shadow-md shadow-black ${ selectedOption === currentQuestion.correct_option? "bg-green-400" : "bg-red-500"} `
                       : 
